@@ -26,6 +26,11 @@ private:
    */
   void handle_connection(int client_socket);
 
+  /*
+   * Sends message to client.
+   */
+  void send_message(int client_socket, std::string message);
+
 public:
   webserver(int port, logger *logger) : portno(port), log(logger) {}
 

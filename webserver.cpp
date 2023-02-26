@@ -69,8 +69,12 @@ void webserver::handle_connection(int client_socket) {
   }
 
   auto response = handler(httpRequest);
+  send_message(client_socket, response);
+}
+
+void webserver::send_message(int client_socket, std::string message) {
   const auto bytes_written =
-      write(client_socket, response.data(), response.size());
+      write(client_socket, message.data(), message.size());
 
   if (bytes_written < 0) {
     log->log_err("ERROR writing to socket\n");
