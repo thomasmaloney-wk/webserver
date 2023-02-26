@@ -14,5 +14,5 @@ $ make
 To run the server, you need to specify a port number. For example:
 
 ```
-$ ./server 8080
+$ ./server --port 8080
 ```
