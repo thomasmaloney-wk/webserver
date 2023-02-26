@@ -37,7 +37,8 @@ const std::string usage_info =
     "Options:\n"
     "  --help\t\tShow this message\n"
     "  --logfile <LOG_FILE>\tSpecify a file to output logs to\n"
-    "  --port <PORT_NUMBER>\tSpecify a port number\n";
+    "  --port <PORT_NUMBER>\tSpecify a port number\n"
+    "  --local\t\tdefault port to 8080";
 
 prog_args parse_prog_args(int argc, char *argv[]) {
   auto args = std::vector<std::string_view>(argv + 1, argv + argc);
@@ -51,6 +52,8 @@ prog_args parse_prog_args(int argc, char *argv[]) {
       parsed_args.log_file = std::string(*it);
     } else if (*it == "--port"_sv && ++it != args.end()) {
       parsed_args.port = std::stoi(std::string(*it));
+    } else if (*it == "--local"_sv) {
+      parsed_args.port = 8080;
     } else {
       std::cerr << "Unknown option: " << *it << "\n";
       return prog_args{};
