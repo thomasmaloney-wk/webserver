@@ -1,7 +1,7 @@
 CXX = clang++
 CXXFLAGS = -std=c++20 -Wall -Wextra -pedantic
 
-SRCS = http_request.cpp server2.cpp
+SRCS = http_request.cpp server.cpp
 OBJS = $(SRCS:.cpp=.o)
 EXEC = server
 
