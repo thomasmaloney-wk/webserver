@@ -2,9 +2,9 @@
 #include <unistd.h>
 
 #include "file_utils.h"
+#include "http_request.h"
 #include "logger.h"
 #include "webserver.h"
-#include "http_request.h"
 
 void webserver::handle_connection(int newsockfd) {
   std::string buffer(BUFFER_SIZE, '\0');
@@ -25,7 +25,7 @@ void webserver::handle_connection(int newsockfd) {
   log->log_info("[INFO] Requested URL: ");
   log->log_info(httpRequest.url);
   log->log_info("\n");
-  
+
   // Check if the request is for the root path ("/")
   if (message.find("GET / HTTP/1.1") != std::string_view::npos) {
     const auto response_body = load_file("index.html");
