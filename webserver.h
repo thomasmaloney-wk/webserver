@@ -24,7 +24,7 @@ private:
   /*
    * Handles an incoming connection.
    */
-  void handle_connection(int newsockfd);
+  void handle_connection(int client_socket);
 
 public:
   webserver(int port, logger *logger) : portno(port), log(logger) {}
