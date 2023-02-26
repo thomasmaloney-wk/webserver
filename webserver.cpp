@@ -26,6 +26,12 @@ std::string index_route_handler(const HttpRequest &request) {
   return response;
 }
 
+std::string shutdown_route_handler(const HttpRequest &request) {
+  const auto response_body = load_file("web/shutdown.html");
+  const std::string response = create_html_response_from_string(response_body);
+  return response;
+}
+
 std::string about_route_handler(const HttpRequest &request) {
   const auto response_body = load_file("web/about.html");
   const std::string response = create_html_response_from_string(response_body);
@@ -36,6 +42,14 @@ std::string not_found_route_handler(const HttpRequest &request) {
   const auto response_body = load_file("web/404.html");
   const std::string not_found = create_html_response_from_string(response_body);
   return not_found;
+}
+
+std::string echo_route_handler(const HttpRequest &request) {
+  auto url = request.url;
+  auto route = url.substr(5);
+  const auto response_body = "<html><head/><body>" + route + "</body></html>";
+  const std::string response = create_html_response_from_string(response_body);
+  return response;
 }
 
 // Webserver method implementations
@@ -78,6 +92,9 @@ void webserver::handle_connection(int client_socket) {
 
   auto response = handler(httpRequest);
   send_message(client_socket, response);
+  if (httpRequest.url == "/Shutdown") {
+    stop();
+  }
 }
 
 void webserver::send_message(int client_socket, std::string message) {
@@ -145,6 +162,8 @@ void webserver::run() {
   // initialize routes
   add_route("/", index_route_handler);
   add_route("/About", about_route_handler);
+  add_route("/Shutdown", shutdown_route_handler);
+  add_route("/Echo/.*", echo_route_handler);
 
   while (running) {
     sockaddr_in cli_addr{};
