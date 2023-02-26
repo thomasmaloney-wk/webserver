@@ -4,6 +4,7 @@
 #include "file_utils.h"
 #include "logger.h"
 #include "webserver.h"
+#include "http_request.h"
 
 void webserver::handle_connection(int newsockfd) {
   std::string buffer(BUFFER_SIZE, '\0');
@@ -16,10 +17,15 @@ void webserver::handle_connection(int newsockfd) {
   }
 
   std::string_view message(buffer.data(), bytes_read);
-  log->log_info("Here is the message:\n");
-  log->log_info(std::string(message));
-  log->log_info("\n");
 
+  auto httpRequest = parse_request(message);
+  log->log_info("[INFO] Requested Method: ");
+  log->log_info(httpRequest.method);
+  log->log_info("\n");
+  log->log_info("[INFO] Requested URL: ");
+  log->log_info(httpRequest.url);
+  log->log_info("\n");
+  
   // Check if the request is for the root path ("/")
   if (message.find("GET / HTTP/1.1") != std::string_view::npos) {
     const auto response_body = load_file("index.html");
