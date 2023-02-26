@@ -21,19 +21,19 @@ std::string create_html_response_from_string(std::string response_body) {
 // Route handlers
 
 std::string index_route_handler(const HttpRequest &request) {
-  const auto response_body = load_file("index.html");
+  const auto response_body = load_file("web/index.html");
   const std::string response = create_html_response_from_string(response_body);
   return response;
 }
 
 std::string about_route_handler(const HttpRequest &request) {
-  const auto response_body = load_file("about.html");
+  const auto response_body = load_file("web/about.html");
   const std::string response = create_html_response_from_string(response_body);
   return response;
 }
 
 std::string not_found_route_handler(const HttpRequest &request) {
-  const auto response_body = load_file("404.html");
+  const auto response_body = load_file("web/404.html");
   const std::string not_found = create_html_response_from_string(response_body);
   return not_found;
 }
