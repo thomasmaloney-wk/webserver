@@ -38,6 +38,26 @@ std::string not_found_route_handler(const HttpRequest &request) {
   return not_found;
 }
 
+// Webserver method implementations
+
+void webserver::start() {
+  if (running) {
+    std::cerr << "Webserver is already running." << std::endl;
+    return;
+  }
+  running = true;
+  server_thread = std::thread(&webserver::run, this);
+}
+
+void webserver::stop() {
+  if (!running) {
+    std::cerr << "Webserver not running." << std::endl;
+    return;
+  }
+  running = false;
+  server_thread.join();
+}
+
 void webserver::handle_connection(int client_socket) {
   auto message = receive_message(client_socket);
   if (message.empty())
@@ -126,7 +146,7 @@ void webserver::run() {
   add_route("/", index_route_handler);
   add_route("/About", about_route_handler);
 
-  while (!should_exit) {
+  while (running) {
     sockaddr_in cli_addr{};
     socklen_t clilen = sizeof(cli_addr);
     const int client_socket =
@@ -144,4 +164,6 @@ void webserver::run() {
   close(server_socket);
 }
 
-void webserver::kill() { should_exit = true; }
+void webserver::kill() { stop(); }
+
+bool webserver::is_running() { return running; }

@@ -78,7 +78,9 @@ int main(int argc, char *argv[]) {
   else
     log = new logger();
   server = new webserver(args.port, log);
-  server->run();
+  server->start();
+  while (server->is_running())
+    ;
 
   return 0;
 }

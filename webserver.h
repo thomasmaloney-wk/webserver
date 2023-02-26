@@ -2,17 +2,19 @@
 #include <functional>
 #include <netinet/in.h>
 #include <regex>
+#include <thread>
 #include <vector>
 
 class logger; // forward declaration
 struct HttpRequest;
 class webserver {
 private:
-  bool should_exit;
+  bool running;
   const int BUFFER_SIZE = 1024;
   sockaddr_in serv_addr;
   int portno;
   logger *log;
+  std::thread server_thread;
 
   struct route {
     std::regex pattern;
@@ -36,6 +38,11 @@ private:
    */
   std::string_view receive_message(int client_socket);
 
+  /*
+   * Run the webserver.
+   */
+  void run();
+
 public:
   webserver(int port, logger *logger) : portno(port), log(logger) {}
 
@@ -46,12 +53,22 @@ public:
                  std::function<std::string(const HttpRequest &)> handler);
 
   /*
-   * Run the webserver.
+   * Starts the webserver.
    */
-  void run();
+  void start();
+
+  /*
+   * Stops the webserver.
+   */
+  void stop();
 
   /*
    * Stops the server.
    */
   void kill();
+
+  /*
+   * Returns whether the server is still running or not.
+   */
+  bool is_running();
 };
