@@ -6,11 +6,7 @@
 #include "logger.h"
 #include "webserver.h"
 
-// Route handlers
-
-std::string index_route_handler(const HttpRequest &request) {
-  const auto response_body = load_file("index.html");
-
+std::string create_html_response_from_string(std::string response_body) {
   // Construct the HTTP response
   std::string response = "HTTP/1.1 200 OK\r\n"
                          "Content-Length: " +
@@ -22,16 +18,23 @@ std::string index_route_handler(const HttpRequest &request) {
   return response;
 }
 
+// Route handlers
+
+std::string index_route_handler(const HttpRequest &request) {
+  const auto response_body = load_file("index.html");
+  const std::string response = create_html_response_from_string(response_body);
+  return response;
+}
+
+std::string about_route_handler(const HttpRequest &request) {
+  const auto response_body = load_file("about.html");
+  const std::string response = create_html_response_from_string(response_body);
+  return response;
+}
+
 std::string not_found_route_handler(const HttpRequest &request) {
-  // Construct a 404 Not Found response
   const auto response_body = load_file("404.html");
-  const std::string not_found = "HTTP/1.1 404 Not Found\r\n"
-                                "Content-Length: " +
-                                std::to_string(response_body.size()) +
-                                "\r\n"
-                                "Content-Type: text/html\r\n"
-                                "\r\n" +
-                                response_body;
+  const std::string not_found = create_html_response_from_string(response_body);
   return not_found;
 }
 
@@ -114,6 +117,7 @@ void webserver::run() {
 
   // initialize routes
   add_route("/", index_route_handler);
+  add_route("/About", about_route_handler);
 
   while (!should_exit) {
     sockaddr_in cli_addr{};
