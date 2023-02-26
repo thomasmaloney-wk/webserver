@@ -1,18 +1,7 @@
-#include <atomic>  // for std::atomic_bool
 #include <csignal> // for signal()
-#include <cstdio>
-#include <filesystem>
-#include <fstream>
 #include <iostream>
-#include <map>
-#include <netinet/in.h>
-#include <span>
-#include <sstream>
 #include <string>
 #include <string_view>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
 
 #include "logger.h"
 #include "webserver.h"
@@ -22,9 +11,6 @@ logger *log;
 
 // global webserver
 webserver *server;
-
-// declare a global flag to indicate whether the server should exit
-std::atomic_bool should_exit(false);
 
 // declare a signal handler function to catch SIGINT
 void handle_signal(int signum) {
