@@ -31,6 +31,11 @@ private:
    */
   void send_message(int client_socket, std::string message);
 
+  /*
+   * Receives a message from the client.
+   */
+  std::string_view receive_message(int client_socket);
+
 public:
   webserver(int port, logger *logger) : portno(port), log(logger) {}
 

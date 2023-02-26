@@ -39,16 +39,9 @@ std::string not_found_route_handler(const HttpRequest &request) {
 }
 
 void webserver::handle_connection(int client_socket) {
-  std::string buffer(BUFFER_SIZE, '\0');
-  const auto bytes_read = read(client_socket, buffer.data(), buffer.size() - 1);
-
-  if (bytes_read < 0) {
-    log->log_err("[ERROR] Reading from socket failed.\n");
-    close(client_socket);
+  auto message = receive_message(client_socket);
+  if (message.empty())
     return;
-  }
-
-  std::string_view message(buffer.data(), bytes_read);
 
   auto httpRequest = parse_request(message);
   log->log_http_request(httpRequest);
@@ -76,6 +69,20 @@ void webserver::send_message(int client_socket, std::string message) {
   } else {
     log->log_info("[INFO] Response sent successfully\n");
   }
+}
+
+std::string_view webserver::receive_message(int client_socket) {
+  std::string buffer(BUFFER_SIZE, '\0');
+  const auto bytes_read = read(client_socket, buffer.data(), buffer.size() - 1);
+
+  if (bytes_read < 0) {
+    log->log_err("[ERROR] Reading from socket failed.\n");
+    close(client_socket);
+    return std::string_view{};
+  }
+
+  std::string_view message(buffer.data(), bytes_read);
+  return message;
 }
 
 void webserver::add_route(
