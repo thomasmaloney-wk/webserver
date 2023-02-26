@@ -38,13 +38,13 @@ std::string not_found_route_handler(const HttpRequest &request) {
   return not_found;
 }
 
-void webserver::handle_connection(int newsockfd) {
+void webserver::handle_connection(int client_socket) {
   std::string buffer(BUFFER_SIZE, '\0');
-  const auto bytes_read = read(newsockfd, buffer.data(), buffer.size() - 1);
+  const auto bytes_read = read(client_socket, buffer.data(), buffer.size() - 1);
 
   if (bytes_read < 0) {
     log->log_err("ERROR reading from socket\n");
-    close(newsockfd);
+    close(client_socket);
     return;
   }
 
@@ -69,7 +69,8 @@ void webserver::handle_connection(int newsockfd) {
   }
 
   auto response = handler(httpRequest);
-  const auto bytes_written = write(newsockfd, response.data(), response.size());
+  const auto bytes_written =
+      write(client_socket, response.data(), response.size());
 
   if (bytes_written < 0) {
     log->log_err("ERROR writing to socket\n");
