@@ -4,6 +4,8 @@
 #include <ostream>
 #include <string>
 
+struct HttpRequest;
+
 class logger {
 private:
   std::ostream *outstream;
@@ -27,6 +29,11 @@ public:
    * Logs string as info.
    */
   void log_info(std::string info);
+
+  /*
+   * Logs data pertaining to an http request.
+   */
+  void log_http_request(HttpRequest request);
 
   /*
    * Logs string as an error.

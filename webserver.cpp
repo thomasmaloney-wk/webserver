@@ -51,12 +51,7 @@ void webserver::handle_connection(int client_socket) {
   std::string_view message(buffer.data(), bytes_read);
 
   auto httpRequest = parse_request(message);
-  log->log_info("[INFO] Requested Method: ");
-  log->log_info(httpRequest.method);
-  log->log_info("\n");
-  log->log_info("[INFO] Requested URL: ");
-  log->log_info(httpRequest.url);
-  log->log_info("\n");
+  log->log_http_request(httpRequest);
 
   // find a matching route and call the handler
   std::function<std::string(const HttpRequest &)> handler =
