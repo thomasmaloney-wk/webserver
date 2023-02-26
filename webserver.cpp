@@ -102,9 +102,9 @@ void webserver::send_message(int client_socket, std::string message) {
       write(client_socket, message.data(), message.size());
 
   if (bytes_written < 0) {
-    log->log_err("[ERROR] writing to socket\n");
+    log->log_err(LOG_ERR + " writing to socket\n");
   } else {
-    log->log_info("[INFO] Response sent successfully\n");
+    log->log_info(LOG_INFO + " Response sent successfully\n");
   }
 }
 
@@ -113,7 +113,7 @@ std::string_view webserver::receive_message(int client_socket) {
   const auto bytes_read = read(client_socket, buffer.data(), buffer.size() - 1);
 
   if (bytes_read < 0) {
-    log->log_err("[ERROR] Reading from socket failed.\n");
+    log->log_err(LOG_ERR + " Reading from socket failed.\n");
     close(client_socket);
     return std::string_view{};
   }
@@ -129,15 +129,15 @@ void webserver::add_route(
 }
 
 void webserver::run() {
-  log->log_info("[INFO] Initializing webserver...\n");
+  log->log_info(LOG_INFO +" Initializing webserver...\n");
   const int server_socket = socket(AF_INET, SOCK_STREAM, 0);
 
   if (server_socket < 0) {
-    log->log_err("[ERROR] Opening socket failed\n");
+    log->log_err(LOG_ERR + " Opening socket failed\n");
     return;
   }
 
-  log->log_info("[INFO] Opened socket.\n");
+  log->log_info(LOG_INFO + " Opened socket.\n");
 
   serv_addr = {};
   serv_addr.sin_family = AF_INET;
@@ -146,18 +146,18 @@ void webserver::run() {
 
   if (bind(server_socket, reinterpret_cast<const sockaddr *>(&serv_addr),
            sizeof(serv_addr)) < 0) {
-    log->log_err("[ERROR] Binding failed.\n");
+    log->log_err(LOG_ERR + " Binding failed.\n");
     return;
   }
 
-  log->log_info("[INFO] Binding successful.\n");
+  log->log_info(LOG_INFO + " Binding successful.\n");
 
   if (listen(server_socket, 5) < 0) {
-    log->log_err("[ERROR] Listening failed.\n");
+    log->log_err(LOG_ERR + " Listening failed.\n");
     return;
   }
 
-  log->log_info("[INFO] Listening successful.\n");
+  log->log_info(LOG_INFO + " Listening successful.\n");
 
   // initialize routes
   add_route("/", index_route_handler);
@@ -172,7 +172,7 @@ void webserver::run() {
         accept(server_socket, reinterpret_cast<sockaddr *>(&cli_addr), &clilen);
 
     if (client_socket < 0) {
-      log->log_err("[ERROR] Unable to accept.\n");
+      log->log_err(LOG_ERR + " Unable to accept.\n");
       continue;
     }
 
