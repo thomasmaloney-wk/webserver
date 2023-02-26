@@ -4,7 +4,7 @@
 #include <ostream>
 #include <string>
 
-struct HttpRequest;
+struct http_request;
 
 class logger {
 private:
@@ -33,7 +33,7 @@ public:
   /*
    * Logs data pertaining to an http request.
    */
-  void log_http_request(HttpRequest request);
+  void log_http_request(http_request request);
 
   /*
    * Logs string as an error.

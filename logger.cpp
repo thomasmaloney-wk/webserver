@@ -8,7 +8,7 @@ logger::~logger() {
 
 void logger::log_info(std::string info) { (*outstream) << info; }
 
-void logger::log_http_request(HttpRequest request) {
+void logger::log_http_request(http_request request) {
   log_info("[INFO] Requested Method: ");
   log_info(request.method);
   log_info("\n");

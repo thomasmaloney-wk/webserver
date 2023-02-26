@@ -2,8 +2,8 @@
 
 #include "http_request.h"
 
-HttpRequest parse_request(std::string_view request) {
-  HttpRequest http_request;
+http_request parse_request(std::string_view request) {
+  http_request http_request;
 
   // find the position of the first and second space characters
   size_t first_space_pos = request.find(' ');

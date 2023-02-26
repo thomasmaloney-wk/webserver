@@ -20,31 +20,31 @@ std::string create_html_response_from_string(std::string response_body) {
 
 // Route handlers
 
-std::string index_route_handler(const HttpRequest &request) {
+std::string index_route_handler(const http_request &request) {
   const auto response_body = load_file("web/index.html");
   const std::string response = create_html_response_from_string(response_body);
   return response;
 }
 
-std::string shutdown_route_handler(const HttpRequest &request) {
+std::string shutdown_route_handler(const http_request &request) {
   const auto response_body = load_file("web/shutdown.html");
   const std::string response = create_html_response_from_string(response_body);
   return response;
 }
 
-std::string about_route_handler(const HttpRequest &request) {
+std::string about_route_handler(const http_request &request) {
   const auto response_body = load_file("web/about.html");
   const std::string response = create_html_response_from_string(response_body);
   return response;
 }
 
-std::string not_found_route_handler(const HttpRequest &request) {
+std::string not_found_route_handler(const http_request &request) {
   const auto response_body = load_file("web/404.html");
   const std::string not_found = create_html_response_from_string(response_body);
   return not_found;
 }
 
-std::string echo_route_handler(const HttpRequest &request) {
+std::string echo_route_handler(const http_request &request) {
   auto url = request.url;
   auto route = url.substr(5);
   const auto response_body = "<html><head/><body>" + route + "</body></html>";
@@ -81,7 +81,7 @@ void webserver::handle_connection(int client_socket) {
   log->log_http_request(httpRequest);
 
   // find a matching route and call the handler
-  std::function<std::string(const HttpRequest &)> handler =
+  std::function<std::string(const http_request &)> handler =
       not_found_route_handler;
   for (const auto &route : routes) {
     if (std::regex_match(httpRequest.url, route.pattern)) {
@@ -124,7 +124,7 @@ std::string_view webserver::receive_message(int client_socket) {
 
 void webserver::add_route(
     const std::string &pattern,
-    std::function<std::string(const HttpRequest &)> handler) {
+    std::function<std::string(const http_request &)> handler) {
   routes.push_back({std::regex(pattern), handler});
 }
 

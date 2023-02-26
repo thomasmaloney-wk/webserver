@@ -2,11 +2,11 @@
 #include <map>
 #include <string>
 
-struct HttpRequest {
+struct http_request {
   std::string method;
   std::string url;
   std::map<std::string, std::string> headers;
   std::string body;
 };
 
-HttpRequest parse_request(std::string_view request);
+http_request parse_request(std::string_view request);
