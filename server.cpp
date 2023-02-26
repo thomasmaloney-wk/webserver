@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
 
   auto args = parse_prog_args(argc, argv);
   if (args.port == -1) {
-    std::cerr << "ERROR, no port provided\n";
+    std::cerr << "[ERROR] No port provided.\n";
     return 1;
   }
   // register the signal handler

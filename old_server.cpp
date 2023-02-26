@@ -12,7 +12,7 @@ const int BUFFER_SIZE = 1024;
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
-        std::cerr << "ERROR, no port provided\n";
+        std::cerr << "[ERROR] no port provided\n";
         return 1;
     }
 
@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
     const int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
     if (sockfd < 0) {
-        std::cerr << "ERROR opening socket\n";
+        std::cerr << "[ERROR]opening socket\n";
         return 1;
     }
 
@@ -31,12 +31,12 @@ int main(int argc, char* argv[]) {
     serv_addr.sin_port = htons(portno);
 
     if (bind(sockfd, reinterpret_cast<const sockaddr*>(&serv_addr), sizeof(serv_addr)) < 0) {
-        std::cerr << "ERROR on binding\n";
+        std::cerr << "[ERROR]on binding\n";
         return 1;
     }
 
     if (listen(sockfd, 5) < 0) {
-        std::cerr << "ERROR on listening\n";
+        std::cerr << "[ERROR]on listening\n";
         return 1;
     }
 
@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
         const int newsockfd = accept(sockfd, reinterpret_cast<sockaddr*>(&cli_addr), &clilen);
 
         if (newsockfd < 0) {
-            std::cerr << "ERROR on accept\n";
+            std::cerr << "[ERROR]on accept\n";
             continue;
         }
 
@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
         const auto bytes_read = read(newsockfd, buffer.data(), buffer.size() - 1);
 
         if (bytes_read < 0) {
-            std::cerr << "ERROR reading from socket\n";
+            std::cerr << "[ERROR]reading from socket\n";
             close(newsockfd);
             continue;
         }
@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
         const auto bytes_written = write(newsockfd, message.data(), message.size());
 
         if (bytes_written < 0) {
-            std::cerr << "ERROR writing to socket\n";
+            std::cerr << "[ERROR]writing to socket\n";
         }
 
         close(newsockfd);

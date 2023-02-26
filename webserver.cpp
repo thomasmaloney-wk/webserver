@@ -43,7 +43,7 @@ void webserver::handle_connection(int client_socket) {
   const auto bytes_read = read(client_socket, buffer.data(), buffer.size() - 1);
 
   if (bytes_read < 0) {
-    log->log_err("ERROR reading from socket\n");
+    log->log_err("[ERROR] Reading from socket failed.\n");
     close(client_socket);
     return;
   }
@@ -72,9 +72,9 @@ void webserver::send_message(int client_socket, std::string message) {
       write(client_socket, message.data(), message.size());
 
   if (bytes_written < 0) {
-    log->log_err("ERROR writing to socket\n");
+    log->log_err("[ERROR] writing to socket\n");
   } else {
-    log->log_info("Response sent successfully\n");
+    log->log_info("[INFO] Response sent successfully\n");
   }
 }
 
@@ -89,7 +89,7 @@ void webserver::run() {
   const int server_socket = socket(AF_INET, SOCK_STREAM, 0);
 
   if (server_socket < 0) {
-    log->log_err("ERROR opening socket\n");
+    log->log_err("[ERROR] Opening socket failed\n");
     return;
   }
 
@@ -102,14 +102,14 @@ void webserver::run() {
 
   if (bind(server_socket, reinterpret_cast<const sockaddr *>(&serv_addr),
            sizeof(serv_addr)) < 0) {
-    log->log_err("ERROR on binding\n");
+    log->log_err("[ERROR] Binding failed.\n");
     return;
   }
 
   log->log_info("[INFO] Binding successful.\n");
 
   if (listen(server_socket, 5) < 0) {
-    log->log_err("ERROR on listening\n");
+    log->log_err("[ERROR] Listening failed.\n");
     return;
   }
 
@@ -126,7 +126,7 @@ void webserver::run() {
         accept(server_socket, reinterpret_cast<sockaddr *>(&cli_addr), &clilen);
 
     if (client_socket < 0) {
-      log->log_err("ERROR on accept\n");
+      log->log_err("[ERROR] Unable to accept.\n");
       continue;
     }
 
