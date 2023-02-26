@@ -86,9 +86,9 @@ void webserver::add_route(
 
 void webserver::run() {
   log->log_info("[INFO] Initializing webserver...\n");
-  const int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+  const int server_socket = socket(AF_INET, SOCK_STREAM, 0);
 
-  if (sockfd < 0) {
+  if (server_socket < 0) {
     log->log_err("ERROR opening socket\n");
     return;
   }
@@ -100,7 +100,7 @@ void webserver::run() {
   serv_addr.sin_addr.s_addr = INADDR_ANY;
   serv_addr.sin_port = htons(portno);
 
-  if (bind(sockfd, reinterpret_cast<const sockaddr *>(&serv_addr),
+  if (bind(server_socket, reinterpret_cast<const sockaddr *>(&serv_addr),
            sizeof(serv_addr)) < 0) {
     log->log_err("ERROR on binding\n");
     return;
@@ -108,7 +108,7 @@ void webserver::run() {
 
   log->log_info("[INFO] Binding successful.\n");
 
-  if (listen(sockfd, 5) < 0) {
+  if (listen(server_socket, 5) < 0) {
     log->log_err("ERROR on listening\n");
     return;
   }
@@ -122,19 +122,19 @@ void webserver::run() {
   while (!should_exit) {
     sockaddr_in cli_addr{};
     socklen_t clilen = sizeof(cli_addr);
-    const int newsockfd =
-        accept(sockfd, reinterpret_cast<sockaddr *>(&cli_addr), &clilen);
+    const int client_socket =
+        accept(server_socket, reinterpret_cast<sockaddr *>(&cli_addr), &clilen);
 
-    if (newsockfd < 0) {
+    if (client_socket < 0) {
       log->log_err("ERROR on accept\n");
       continue;
     }
 
-    handle_connection(newsockfd);
+    handle_connection(client_socket);
 
-    close(newsockfd);
+    close(client_socket);
   }
-  close(sockfd);
+  close(server_socket);
 }
 
 void webserver::kill() { should_exit = true; }
