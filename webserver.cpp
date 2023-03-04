@@ -1,5 +1,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
+#include <arpa/inet.h>
+#include <errno.h>
 
 #include "file_utils.h"
 #include "http_request.h"
@@ -139,14 +141,16 @@ void webserver::run() {
 
   log->log_info(LOG_INFO + " Opened socket.\n");
 
+  auto inaddr = address.empty() ? INADDR_ANY : inet_addr(address.c_str());
   serv_addr = {};
   serv_addr.sin_family = AF_INET;
-  serv_addr.sin_addr.s_addr = INADDR_ANY;
+  serv_addr.sin_addr.s_addr = inaddr;
   serv_addr.sin_port = htons(portno);
 
   if (bind(server_socket, reinterpret_cast<const sockaddr *>(&serv_addr),
            sizeof(serv_addr)) < 0) {
-    log->log_err(LOG_ERR + " Binding failed.\n");
+    log->log_err(LOG_ERR + " Binding failed. ");
+    log->log_err(std::strerror(errno));
     return;
   }
 

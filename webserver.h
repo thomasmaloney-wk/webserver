@@ -13,6 +13,7 @@ private:
   const int BUFFER_SIZE = 1024;
   sockaddr_in serv_addr;
   int portno;
+  std::string address;
   logger *log;
   std::thread server_thread;
 
@@ -44,7 +45,7 @@ private:
   void run();
 
 public:
-  webserver(int port, logger *logger) : portno(port), log(logger) {}
+  webserver(int port, std::string addr, logger *logger) : portno(port), address(addr), log(logger) {}
 
   /*
    * Add a route handler for the server.
