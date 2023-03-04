@@ -28,8 +28,10 @@ void handle_signal(int signum) {
 }
 
 struct prog_args {
+  bool help;
   int port;
   std::string log_file;
+  std::string address;
 };
 
 const std::string usage_info =
@@ -38,7 +40,8 @@ const std::string usage_info =
     "  --help\t\tShow this message\n"
     "  --logfile <LOG_FILE>\tSpecify a file to output logs to\n"
     "  --port <PORT_NUMBER>\tSpecify a port number\n"
-    "  --local\t\tdefault port to 8080";
+    "  --addr <ADDRESS>\tSpecify an address\n"
+    "  --local\t\tdefault port to 8080\n";
 
 prog_args parse_prog_args(int argc, char *argv[]) {
   auto args = std::vector<std::string_view>(argv + 1, argv + argc);
@@ -47,11 +50,13 @@ prog_args parse_prog_args(int argc, char *argv[]) {
   // Loop through the arguments and process them
   for (auto it = args.begin(); it != args.end(); ++it) {
     if (*it == "--help"_sv) {
-      std::cout << usage_info;
+      parsed_args.help = true;
     } else if (*it == "--logfile"_sv && ++it != args.end()) {
       parsed_args.log_file = std::string(*it);
     } else if (*it == "--port"_sv && ++it != args.end()) {
       parsed_args.port = std::stoi(std::string(*it));
+    } else if (*it == "--addr"_sv && ++it != args.end()) {
+      parsed_args.address = std::string(*it);
     } else if (*it == "--local"_sv) {
       parsed_args.port = 8080;
     } else {
@@ -69,6 +74,11 @@ int main(int argc, char *argv[]) {
   }
 
   auto args = parse_prog_args(argc, argv);
+  if (args.help) {
+    std::cout << usage_info;
+    return 0;
+  }
+  
   if (args.port == -1) {
     std::cerr << LOG_ERR + " No port provided.\n";
     return 1;
@@ -80,7 +90,7 @@ int main(int argc, char *argv[]) {
     log = new logger(args.log_file);
   else
     log = new logger();
-  server = new webserver(args.port, log);
+  server = new webserver(args.port, args.address, log);
   server->start();
   while (server->is_running())
     ;
