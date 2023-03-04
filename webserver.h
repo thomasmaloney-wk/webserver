@@ -6,6 +6,7 @@
 #include <vector>
 
 class logger; // forward declaration
+class controller;
 struct http_request;
 class webserver {
 private:
@@ -20,6 +21,7 @@ private:
   struct route {
     std::regex pattern;
     std::function<std::string(const http_request &)> handler;
+    controller* controller_handler;
   };
 
   std::vector<route> routes;
@@ -52,6 +54,12 @@ public:
    */
   void add_route(const std::string &pattern,
                  std::function<std::string(const http_request &)> handler);
+  
+  /*
+   * Add a route handler for the server.
+   */
+  void add_route(const std::string &pattern,
+                 controller* handler);
 
   /*
    * Starts the webserver.

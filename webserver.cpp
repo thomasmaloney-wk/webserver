@@ -1,23 +1,21 @@
-#include <sys/socket.h>
-#include <unistd.h>
 #include <arpa/inet.h>
 #include <errno.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
+#include "controllers/about_controller.h"
+#include "controllers/controller.h"
+#include "controllers/index_controller.h"
 #include "file_utils.h"
 #include "http_request.h"
+#include "http_response.h"
 #include "logger.h"
 #include "webserver.h"
 
 std::string create_html_response_from_string(std::string response_body) {
   // Construct the HTTP response
-  std::string response = "HTTP/1.1 200 OK\r\n"
-                         "Content-Length: " +
-                         std::to_string(response_body.size()) +
-                         "\r\n"
-                         "Content-Type: text/html\r\n"
-                         "\r\n" +
-                         response_body;
-  return response;
+  auto response = http_response(http_response::OK, response_body, "text/html");
+  return response.to_string();
 }
 
 // Route handlers
@@ -130,8 +128,14 @@ void webserver::add_route(
   routes.push_back({std::regex(pattern), handler});
 }
 
+void webserver::add_route(
+    const std::string &pattern,
+    controller* handler) {
+  routes.push_back({std::regex(pattern), nullptr, handler});
+}
+
 void webserver::run() {
-  log->log_info(LOG_INFO +" Initializing webserver...\n");
+  log->log_info(LOG_INFO + " Initializing webserver...\n");
   const int server_socket = socket(AF_INET, SOCK_STREAM, 0);
 
   if (server_socket < 0) {
@@ -164,7 +168,7 @@ void webserver::run() {
   log->log_info(LOG_INFO + " Listening successful.\n");
 
   // initialize routes
-  add_route("/", index_route_handler);
+  add_route("/", new index_controller());
   add_route("/About", about_route_handler);
   add_route("/Shutdown", shutdown_route_handler);
   add_route("/Echo/.*", echo_route_handler);
