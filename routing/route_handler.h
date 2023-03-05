@@ -3,7 +3,7 @@
 #include <regex>
 #include <vector>
 
-struct http_request;
+class http_request;
 class http_response;
 class controller;
 
@@ -13,7 +13,7 @@ private:
   void init();
   struct route {
     std::regex pattern;
-    std::function<http_response *(const http_request &)> handler;
+    std::function<http_response *(const http_request *)> handler;
     controller *controller_handler;
   };
 
@@ -21,13 +21,13 @@ private:
 
 public:
   static route_handler *create_route_handler();
-  http_response *handle_request(http_request request);
+  http_response *handle_request(http_request *request);
 
   /*
    * Add a route handler for the server.
    */
   void add_route(const std::string &pattern,
-                 std::function<http_response *(const http_request &)> handler);
+                 std::function<http_response *(const http_request *)> handler);
 
   /*
    * Add a route handler for the server.

@@ -15,19 +15,19 @@ http_response *create_html_response_from_string(std::string response_body) {
 
 // Route handlers
 
-http_response *shutdown_route_handler(const http_request &request) {
+http_response *shutdown_route_handler(const http_request *request) {
   const auto response_body = load_file("web/shutdown.html");
   return create_html_response_from_string(response_body);
 }
 
-http_response *echo_route_handler(const http_request &request) {
-  auto url = request.url;
+http_response *echo_route_handler(const http_request *request) {
+  auto url = request->raw_url();
   auto route = url.substr(5);
   const auto response_body = "<html><head/><body>" + route + "</body></html>";
   return create_html_response_from_string(response_body);
 }
 
-http_response *not_found_route_handler(const http_request &request) {
+http_response *not_found_route_handler(const http_request *request) {
   const auto response_body = load_file("web/404.html");
   auto response = http_response::not_found(response_body);
   return (http_response *)response;
@@ -47,23 +47,23 @@ route_handler *route_handler::create_route_handler() {
   return router;
 }
 
-http_response *route_handler::handle_request(http_request request) {
+http_response *route_handler::handle_request(http_request *request) {
   route _route = {std::regex("/404"), not_found_route_handler};
   for (const auto &route : routes) {
-    if (std::regex_match(request.url, route.pattern)) {
+    if (std::regex_match(request->raw_url(), route.pattern)) {
       _route = route;
       break;
     }
   }
 
   return _route.controller_handler != nullptr
-             ? _route.controller_handler->handle_request(&request)
+             ? _route.controller_handler->handle_request(request)
              : _route.handler(request);
 }
 
 void route_handler::add_route(
     const std::string &pattern,
-    std::function<http_response *(const http_request &)> handler) {
+    std::function<http_response *(const http_request *)> handler) {
   routes.push_back({std::regex(pattern), handler});
 }
 
