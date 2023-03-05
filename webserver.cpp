@@ -47,8 +47,6 @@ void webserver::handle_connection(int client_socket) {
   if (response != nullptr &&
       response->headers.contains(http_response::SHUTDOWN_HEADER_KEY)) {
     stop();
-  } else if (httpRequest->raw_url() == "/Shutdown") {
-    stop();
   }
 }
 
