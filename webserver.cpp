@@ -38,7 +38,7 @@ void webserver::handle_connection(int client_socket) {
   if (message.empty())
     return;
 
-  auto httpRequest = parse_request(message);
+  auto httpRequest = http_request::parse_request(message);
   log->log_http_request(httpRequest);
 
   http_response *response = router->handle_request(httpRequest);
@@ -47,7 +47,7 @@ void webserver::handle_connection(int client_socket) {
   if (response != nullptr &&
       response->headers.contains(http_response::SHUTDOWN_HEADER_KEY)) {
     stop();
-  } else if (httpRequest.url == "/Shutdown") {
+  } else if (httpRequest->raw_url() == "/Shutdown") {
     stop();
   }
 }

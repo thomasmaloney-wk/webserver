@@ -8,7 +8,7 @@
 class logger; // forward declaration
 class controller;
 class route_handler;
-struct http_request;
+class http_request;
 class webserver {
 private:
   bool running;
