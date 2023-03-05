@@ -1,8 +1,30 @@
+<!DOCTYPE html>
 <html>
-<head>
-  <title>Shutdown</title>
-</head>
-<body>
-  <h1>Shutting Down.</h1>
-</body>
+  <head>
+    <title>Shutdown</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  </head>
+  <body>
+    <script>
+      function shutdownServer() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", '/Shutdown', true);
+        xhr.send();
+      }
+    </script>
+    <div class="container mt-5">
+      <h1>Shut down page.</h1>
+      <p>Are you sure you want to shut down the server?</p>
+      <a href="/" class="btn btn-info">Index</a>
+      <a href="/About" class="btn btn-info">About</a>
+    </div>
+    <div class="container mt-5">
+      <button type="button" class="btn btn-danger" onclick="shutdownServer()">Shut Down</button>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.1/dist/umd/popper.min.js" integrity="sha384-+dyssYRojhYFvSZfX9z+HiwjKMk2Q3qRYhSIaOjwNy+ObY8tAK4SLt0/x0Q9NhUN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
 </html>
