@@ -1,5 +1,5 @@
 #pragma once
-struct http_request;
+class http_request;
 class http_response;
 
 class controller {
