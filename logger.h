@@ -4,7 +4,7 @@
 #include <ostream>
 #include <string>
 
-struct http_request;
+class http_request;
 static const std::string LOG_INFO = "\033[0;36m[INFO]\033[m";
 static const std::string LOG_ERR = "\033[0;31m[ERROR]\033[m";
 class logger {
@@ -34,7 +34,7 @@ public:
   /*
    * Logs data pertaining to an http request.
    */
-  void log_http_request(http_request request);
+  void log_http_request(http_request *request);
 
   /*
    * Logs string as an error.
