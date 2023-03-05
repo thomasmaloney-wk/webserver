@@ -12,17 +12,21 @@ EXEC = server
 all: $(EXEC)
 
 $(EXEC): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(OBJS) -o $(EXEC)
+	@echo "Linking $(EXEC)"
+	@$(CXX) $(CXXFLAGS) $(OBJS) -o $(EXEC)
 
 $(OBJ_DIR)/%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	@echo "Compiling $<"
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/%.o: controllers/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	@echo "Compiling $<"
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .PHONY: clean
 clean:
-	rm -f $(OBJS) $(EXEC)
+	@echo "Removing build objects"
+	@rm -f $(OBJS) $(EXEC)
 
 .PHONY: serve-local
 serve-local: $(MAKE)
