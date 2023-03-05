@@ -1,6 +1,19 @@
 #include "http_response.h"
 #include <sstream>
 
+const http_response *
+http_response::method_not_allowed(std::vector<std::string> allowed_methods) {
+  const std::string body =
+      "<html><body><h1>405 Method Not Allowed</h1></body></html>";
+  return new http_response(http_response::METHOD_NOT_ALLOWED, body,
+                           "text/html");
+}
+
+const http_response *http_response::not_found(const std::string &body_text) {
+  return new http_response(http_response::NOT_FOUND, body_text,
+                           "text/html");
+}
+
 http_response::http_response(int status_code, const std::string &body,
                              const std::string &content_type)
     : status_code(status_code), body(body), content_type(content_type) {
