@@ -13,35 +13,6 @@
 #include "routing/route_handler.h"
 #include "webserver.h"
 
-std::string create_html_response_from_string(std::string response_body) {
-  // Construct the HTTP response
-  auto response =
-      http_response(http_response_code::OK, response_body, "text/html");
-  return response.to_string();
-}
-
-// Route handlers
-
-std::string shutdown_route_handler(const http_request &request) {
-  const auto response_body = load_file("web/shutdown.html");
-  const std::string response = create_html_response_from_string(response_body);
-  return response;
-}
-
-std::string not_found_route_handler(const http_request &request) {
-  const auto response_body = load_file("web/404.html");
-  const auto not_found_response = http_response::not_found(response_body);
-  return not_found_response->to_string();
-}
-
-std::string echo_route_handler(const http_request &request) {
-  auto url = request.url;
-  auto route = url.substr(5);
-  const auto response_body = "<html><head/><body>" + route + "</body></html>";
-  const std::string response = create_html_response_from_string(response_body);
-  return response;
-}
-
 // Webserver method implementations
 
 void webserver::start() {
