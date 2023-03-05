@@ -28,8 +28,8 @@ std::string shutdown_route_handler(const http_request &request) {
 
 std::string not_found_route_handler(const http_request &request) {
   const auto response_body = load_file("web/404.html");
-  const std::string not_found = create_html_response_from_string(response_body);
-  return not_found;
+  const auto not_found_response = http_response::not_found(response_body);
+  return not_found_response->to_string();
 }
 
 std::string echo_route_handler(const http_request &request) {
