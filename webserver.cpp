@@ -81,16 +81,19 @@ void webserver::handle_connection(int client_socket) {
   log->log_http_request(httpRequest);
 
   // find a matching route and call the handler
-  std::function<std::string(const http_request &)> handler =
-      not_found_route_handler;
+  route _route = {std::regex("/404"), not_found_route_handler};
   for (const auto &route : routes) {
     if (std::regex_match(httpRequest.url, route.pattern)) {
-      handler = route.handler;
+      _route = route;
       break;
     }
   }
 
-  auto response = handler(httpRequest);
+  std::string response =
+      _route.controller_handler != nullptr
+          ? _route.controller_handler->handle_request(&httpRequest)->to_string()
+          : _route.handler(httpRequest);
+
   send_message(client_socket, response);
   if (httpRequest.url == "/Shutdown") {
     stop();
@@ -128,9 +131,7 @@ void webserver::add_route(
   routes.push_back({std::regex(pattern), handler});
 }
 
-void webserver::add_route(
-    const std::string &pattern,
-    controller* handler) {
+void webserver::add_route(const std::string &pattern, controller *handler) {
   routes.push_back({std::regex(pattern), nullptr, handler});
 }
 
