@@ -7,6 +7,7 @@
 
 class logger; // forward declaration
 class controller;
+class route_handler;
 struct http_request;
 class webserver {
 private:
@@ -17,14 +18,7 @@ private:
   std::string address;
   logger *log;
   std::thread server_thread;
-
-  struct route {
-    std::regex pattern;
-    std::function<std::string(const http_request &)> handler;
-    controller *controller_handler;
-  };
-
-  std::vector<route> routes;
+  route_handler *router;
 
   /*
    * Handles an incoming connection.
@@ -49,17 +43,6 @@ private:
 public:
   webserver(int port, std::string addr, logger *logger)
       : portno(port), address(addr), log(logger) {}
-
-  /*
-   * Add a route handler for the server.
-   */
-  void add_route(const std::string &pattern,
-                 std::function<std::string(const http_request &)> handler);
-
-  /*
-   * Add a route handler for the server.
-   */
-  void add_route(const std::string &pattern, controller *handler);
 
   /*
    * Starts the webserver.

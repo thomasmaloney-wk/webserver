@@ -10,6 +10,7 @@
 #include "http/http_request.h"
 #include "http/http_response.h"
 #include "logger.h"
+#include "routing/route_handler.h"
 #include "webserver.h"
 
 std::string create_html_response_from_string(std::string response_body) {
@@ -69,25 +70,9 @@ void webserver::handle_connection(int client_socket) {
   auto httpRequest = parse_request(message);
   log->log_http_request(httpRequest);
 
-  // find a matching route and call the handler
-  route _route = {std::regex("/404"), not_found_route_handler};
-  for (const auto &route : routes) {
-    if (std::regex_match(httpRequest.url, route.pattern)) {
-      _route = route;
-      break;
-    }
-  }
+  http_response *response = router->handle_request(httpRequest);
 
-  std::string response_str;
-  http_response *response = nullptr;
-  if (_route.controller_handler != nullptr) {
-    response = _route.controller_handler->handle_request(&httpRequest);
-    response_str = response->to_string();
-  } else {
-    response_str = _route.handler(httpRequest);
-  }
-
-  send_message(client_socket, response_str);
+  send_message(client_socket, response->to_string());
   if (response != nullptr &&
       response->headers.contains(http_response::SHUTDOWN_HEADER_KEY)) {
     stop();
@@ -119,16 +104,6 @@ std::string_view webserver::receive_message(int client_socket) {
 
   std::string_view message(buffer.data(), bytes_read);
   return message;
-}
-
-void webserver::add_route(
-    const std::string &pattern,
-    std::function<std::string(const http_request &)> handler) {
-  routes.push_back({std::regex(pattern), handler});
-}
-
-void webserver::add_route(const std::string &pattern, controller *handler) {
-  routes.push_back({std::regex(pattern), nullptr, handler});
 }
 
 void webserver::run() {
@@ -164,11 +139,9 @@ void webserver::run() {
 
   log->log_info(LOG_INFO + " Listening successful.\n");
 
-  // initialize routes
-  add_route("/", new index_controller());
-  add_route("/About", new about_controller());
-  add_route("/Shutdown", shutdown_route_handler);
-  add_route("/Echo/.*", echo_route_handler);
+  log->log_info(LOG_INFO + " Initializing router...\n");
+  router = route_handler::create_route_handler();
+  log->log_info(LOG_INFO + " Router init successful\n");
 
   while (running) {
     sockaddr_in cli_addr{};
