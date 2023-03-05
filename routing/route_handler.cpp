@@ -3,6 +3,7 @@
 
 #include "../controllers/about_controller.h"
 #include "../controllers/index_controller.h"
+#include "../controllers/shutdown_controller.h"
 #include "../file_utils.h"
 #include "../http/http_request.h"
 #include "../http/http_response.h"
@@ -37,7 +38,7 @@ void route_handler::init() {
   // initialize routes
   add_route("/", new index_controller());
   add_route("/About", new about_controller());
-  add_route("/Shutdown", shutdown_route_handler);
+  add_route("/Shutdown", new shutdown_controller());
   add_route("/Echo/.*", echo_route_handler);
 }
 
