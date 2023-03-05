@@ -7,8 +7,8 @@
 #include "controllers/controller.h"
 #include "controllers/index_controller.h"
 #include "file_utils.h"
-#include "http_request.h"
-#include "http_response.h"
+#include "http/http_request.h"
+#include "http/http_response.h"
 #include "logger.h"
 #include "webserver.h"
 

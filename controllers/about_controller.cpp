@@ -1,7 +1,7 @@
 #include "about_controller.h"
 #include "../file_utils.h"
-#include "../http_request.h"
-#include "../http_response.h"
+#include "../http/http_request.h"
+#include "../http/http_response.h"
 
 http_response *about_controller::home() {
   const auto response_body = load_file("web/about.html");

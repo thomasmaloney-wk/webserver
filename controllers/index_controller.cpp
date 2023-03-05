@@ -1,7 +1,7 @@
 #include "index_controller.h"
 #include "../file_utils.h"
-#include "../http_request.h"
-#include "../http_response.h"
+#include "../http/http_request.h"
+#include "../http/http_response.h"
 
 http_response *index_controller::home() {
   const auto response_body = load_file("web/index.html");

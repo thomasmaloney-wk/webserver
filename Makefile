@@ -1,9 +1,11 @@
 CXX = clang++
 CXXFLAGS = -std=c++20 -Wall -Wextra -pedantic
+HTTP_SRC = /http/http_response.cpp /http/http_request.cpp
 CONTROLLER_SRC = /controllers/index_controller.cpp /controllers/about_controller.cpp
-SRCS = file_utils.cpp logger.cpp http_response.cpp \
+SRCS = file_utils.cpp logger.cpp \
+		$(HTTP_SRC) \
 		$(CONTROLLER_SRC) \
-		webserver.cpp http_request.cpp main.cpp
+		webserver.cpp main.cpp
 OBJ_DIR = obj
 SRCS_NODIR := $(notdir $(SRCS))
 OBJS = $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(SRCS_NODIR))
@@ -20,6 +22,10 @@ $(OBJ_DIR)/%.o: %.cpp
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/%.o: controllers/%.cpp
+	@echo "Compiling $<"
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: http/%.cpp
 	@echo "Compiling $<"
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
