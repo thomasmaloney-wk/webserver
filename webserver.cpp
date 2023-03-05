@@ -170,7 +170,7 @@ void webserver::run() {
 
   // initialize routes
   add_route("/", new index_controller());
-  add_route("/About", about_route_handler);
+  add_route("/About", new about_controller());
   add_route("/Shutdown", shutdown_route_handler);
   add_route("/Echo/.*", echo_route_handler);
 

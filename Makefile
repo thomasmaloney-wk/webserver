@@ -1,7 +1,9 @@
 CXX = clang++
 CXXFLAGS = -std=c++20 -Wall -Wextra -pedantic
-
-SRCS = file_utils.cpp logger.cpp http_response.cpp /controllers/index_controller.cpp webserver.cpp http_request.cpp main.cpp
+CONTROLLER_SRC = /controllers/index_controller.cpp /controllers/about_controller.cpp
+SRCS = file_utils.cpp logger.cpp http_response.cpp \
+		$(CONTROLLER_SRC) \
+		webserver.cpp http_request.cpp main.cpp
 OBJ_DIR = obj
 SRCS_NODIR := $(notdir $(SRCS))
 OBJS = $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(SRCS_NODIR))
@@ -23,5 +25,5 @@ clean:
 	rm -f $(OBJS) $(EXEC)
 
 .PHONY: serve-local
-serve-local:
+serve-local: $(MAKE)
 	./server --local

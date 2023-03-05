@@ -4,7 +4,7 @@
 #include "../http_response.h"
 
 http_response *about_controller::home() {
-  const auto response_body = load_file("../web/about.html");
+  const auto response_body = load_file("web/about.html");
   return new http_response(http_response::OK, response_body, "text/html");
 }
 
