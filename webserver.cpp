@@ -14,7 +14,8 @@
 
 std::string create_html_response_from_string(std::string response_body) {
   // Construct the HTTP response
-  auto response = http_response(http_response::OK, response_body, "text/html");
+  auto response =
+      http_response(http_response_code::OK, response_body, "text/html");
   return response.to_string();
 }
 
