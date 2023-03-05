@@ -13,8 +13,10 @@ public:
   static const int METHOD_NOT_ALLOWED = 405;
   static const int INTERNAL_SERVER_ERROR = 500;
 
-  static const http_response* method_not_allowed(std::vector<std::string> allowed_methods);
-  static const http_response* not_found(const std::string &body_text = "404 Not Found");
+  static const http_response *
+  method_not_allowed(std::vector<std::string> allowed_methods);
+  static const http_response *
+  not_found(const std::string &body_text = "404 Not Found");
 
   int status_code;
   std::string body;

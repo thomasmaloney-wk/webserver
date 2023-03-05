@@ -10,8 +10,7 @@ http_response::method_not_allowed(std::vector<std::string> allowed_methods) {
 }
 
 const http_response *http_response::not_found(const std::string &body_text) {
-  return new http_response(http_response::NOT_FOUND, body_text,
-                           "text/html");
+  return new http_response(http_response::NOT_FOUND, body_text, "text/html");
 }
 
 http_response::http_response(int status_code, const std::string &body,

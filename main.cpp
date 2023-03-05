@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
     std::cout << usage_info;
     return 0;
   }
-  
+
   if (args.port == -1) {
     std::cerr << LOG_ERR + " No port provided.\n";
     return 1;
