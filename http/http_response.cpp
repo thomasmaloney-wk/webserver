@@ -32,6 +32,11 @@ std::string http_response::to_string_deprecated() const {
   return oss.str();
 }
 
+void http_response::add_header(std::string key, std::string value) {
+  // for now don't bother with collisions
+  headers.insert({key, value});
+}
+
 std::string http_response::to_string() const {
   std::ostringstream oss;
   oss << "HTTP/1.1 " << status_code << " " << status_code_to_string(status_code)

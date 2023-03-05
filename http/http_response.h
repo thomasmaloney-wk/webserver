@@ -28,6 +28,8 @@ public:
   std::string to_string() const;
   std::string to_string_deprecated() const;
 
+  void add_header(std::string key, std::string value);
+
 private:
   static std::string status_code_to_string(int status_code);
 };

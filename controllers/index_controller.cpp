@@ -9,5 +9,8 @@ http_response *index_controller::home() {
 }
 
 http_response *index_controller::handle_request(http_request *request) {
+  if (request->method != "GET") {
+    return (http_response *)http_response::method_not_allowed({"GET"});
+  }
   return home();
 }
