@@ -1,4 +1,5 @@
 #include <string>
+#include <unordered_map>
 class http_response {
 public:
   static const int OK = 200;
@@ -14,11 +15,12 @@ public:
   int status_code;
   std::string body;
   std::string content_type;
+  std::unordered_map<std::string, std::string> headers;
 
   http_response(int status_code, const std::string &body,
-                const std::string &content_type = "text/plain")
-      : status_code(status_code), body(body), content_type(content_type) {}
+                const std::string &content_type = "text/plain");
   std::string to_string() const;
+  std::string to_string_deprecated() const;
 
 private:
   static std::string status_code_to_string(int status_code);

@@ -1,12 +1,32 @@
 #include "http_response.h"
 #include <sstream>
 
-std::string http_response::to_string() const {
+http_response::http_response(int status_code, const std::string &body,
+                             const std::string &content_type)
+    : status_code(status_code), body(body), content_type(content_type) {
+  // Set default headers
+  headers["Content-Length"] = std::to_string(body.size());
+  headers["Content-Type"] = content_type;
+}
+
+std::string http_response::to_string_deprecated() const {
   std::ostringstream oss;
   oss << "HTTP/1.1 " << status_code << " " << status_code_to_string(status_code)
       << "\r\n";
   oss << "Content-Type: " << content_type << "\r\n";
   oss << "Content-Length: " << body.length() << "\r\n";
+  oss << "\r\n";
+  oss << body;
+  return oss.str();
+}
+
+std::string http_response::to_string() const {
+  std::ostringstream oss;
+  oss << "HTTP/1.1 " << status_code << " " << status_code_to_string(status_code)
+      << "\r\n";
+  for (const auto &[name, value] : headers) {
+    oss << name << ": " << value << "\r\n";
+  }
   oss << "\r\n";
   oss << body;
   return oss.str();
