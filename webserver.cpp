@@ -78,13 +78,20 @@ void webserver::handle_connection(int client_socket) {
     }
   }
 
-  std::string response =
-      _route.controller_handler != nullptr
-          ? _route.controller_handler->handle_request(&httpRequest)->to_string()
-          : _route.handler(httpRequest);
+  std::string response_str;
+  http_response *response = nullptr;
+  if (_route.controller_handler != nullptr) {
+    response = _route.controller_handler->handle_request(&httpRequest);
+    response_str = response->to_string();
+  } else {
+    response_str = _route.handler(httpRequest);
+  }
 
-  send_message(client_socket, response);
-  if (httpRequest.url == "/Shutdown") {
+  send_message(client_socket, response_str);
+  if (response != nullptr &&
+      response->headers.contains(http_response::SHUTDOWN_HEADER_KEY)) {
+    stop();
+  } else if (httpRequest.url == "/Shutdown") {
     stop();
   }
 }
