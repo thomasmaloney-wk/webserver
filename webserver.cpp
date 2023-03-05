@@ -13,8 +13,6 @@
 #include "routing/route_handler.h"
 #include "webserver.h"
 
-// Webserver method implementations
-
 void webserver::start() {
   if (running) {
     std::cerr << "Webserver is already running." << std::endl;
