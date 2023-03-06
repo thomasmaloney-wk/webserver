@@ -6,17 +6,16 @@ logger::~logger() {
     delete outstream;
 }
 
-void logger::log_info(std::string info) { (*outstream) << info; }
+void logger::log_info(std::string info) {
+  (*outstream) << info_prefix << " " << info << std::endl;
+}
 
 void logger::log_http_request(http_request *request) {
-  log_info(LOG_INFO + " Requested Method: ");
-  log_info(request->method());
-  log_info("\n");
-  log_info(LOG_INFO + " Requested URL: ");
-  log_info(request->raw_url());
-  log_info("\n");
+  log_info("Requested Method: " + request->method());
+  log_info("Requested URL: " + request->raw_url());
 }
 
 void logger::log_err(std::string err) {
-  *(is_stdio ? &std::cerr : outstream) << err;
+  *(is_stdio ? &std::cerr : outstream)
+      << error_prefix << " " << err << std::endl;
 }
