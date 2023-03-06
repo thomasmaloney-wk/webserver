@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (args.port == -1) {
-    std::cerr << LOG_ERR + " No port provided.\n";
+    std::cerr << "No port provided.";
     return 1;
   }
   // register the signal handler

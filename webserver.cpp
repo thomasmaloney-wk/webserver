@@ -53,9 +53,9 @@ void webserver::send_message(int client_socket, std::string message) {
       write(client_socket, message.data(), message.size());
 
   if (bytes_written < 0) {
-    log->log_err(LOG_ERR + " writing to socket\n");
+    log->log_err("writing to socket");
   } else {
-    log->log_info(LOG_INFO + " Response sent successfully\n");
+    log->log_info("Response sent successfully");
   }
 }
 
@@ -64,7 +64,7 @@ std::string_view webserver::receive_message(int client_socket) {
   const auto bytes_read = read(client_socket, buffer.data(), buffer.size() - 1);
 
   if (bytes_read < 0) {
-    log->log_err(LOG_ERR + " Reading from socket failed.\n");
+    log->log_err("Reading from socket failed.");
     close(client_socket);
     return std::string_view{};
   }
@@ -74,15 +74,15 @@ std::string_view webserver::receive_message(int client_socket) {
 }
 
 void webserver::run() {
-  log->log_info(LOG_INFO + " Initializing webserver...\n");
+  log->log_info("Initializing webserver...");
   const int server_socket = socket(AF_INET, SOCK_STREAM, 0);
 
   if (server_socket < 0) {
-    log->log_err(LOG_ERR + " Opening socket failed\n");
+    log->log_err("Opening socket failed");
     return;
   }
 
-  log->log_info(LOG_INFO + " Opened socket.\n");
+  log->log_info("Opened socket.");
 
   auto inaddr = address.empty() ? INADDR_ANY : inet_addr(address.c_str());
   serv_addr = {};
@@ -92,23 +92,22 @@ void webserver::run() {
 
   if (bind(server_socket, reinterpret_cast<const sockaddr *>(&serv_addr),
            sizeof(serv_addr)) < 0) {
-    log->log_err(LOG_ERR + " Binding failed. ");
-    log->log_err(std::strerror(errno));
+    log->log_err("Binding failed. " + std::string(std::strerror(errno)));
     return;
   }
 
-  log->log_info(LOG_INFO + " Binding successful.\n");
+  log->log_info("Binding successful.");
 
   if (listen(server_socket, 5) < 0) {
-    log->log_err(LOG_ERR + " Listening failed.\n");
+    log->log_err("Listening failed.");
     return;
   }
 
-  log->log_info(LOG_INFO + " Listening successful.\n");
+  log->log_info("Listening successful.");
 
-  log->log_info(LOG_INFO + " Initializing router...\n");
+  log->log_info("Initializing router...");
   router = route_handler::create_route_handler();
-  log->log_info(LOG_INFO + " Router init successful\n");
+  log->log_info("Router init successful");
 
   while (running) {
     sockaddr_in cli_addr{};
@@ -117,7 +116,7 @@ void webserver::run() {
         accept(server_socket, reinterpret_cast<sockaddr *>(&cli_addr), &clilen);
 
     if (client_socket < 0) {
-      log->log_err(LOG_ERR + " Unable to accept.\n");
+      log->log_err("Unable to accept.");
       continue;
     }
 
