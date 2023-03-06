@@ -57,6 +57,8 @@ http_response::status_code_to_string(http_response_code status_code) {
     return "Forbidden";
   case http_response_code::NOT_FOUND:
     return "Not Found";
+  case http_response_code::TEAPOT:
+    return "I'm A Teapot";
   case http_response_code::INTERNAL_SERVER_ERROR:
     return "Internal Server Error";
   default:

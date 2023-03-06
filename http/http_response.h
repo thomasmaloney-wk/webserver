@@ -11,6 +11,7 @@ enum http_response_code {
   FORBIDDEN = 403,
   NOT_FOUND = 404,
   METHOD_NOT_ALLOWED = 405,
+  TEAPOT = 418,
   INTERNAL_SERVER_ERROR = 500
 };
 class http_response {

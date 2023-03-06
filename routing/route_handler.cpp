@@ -37,7 +37,7 @@ http_response *not_found_route_handler(const http_request *request) {
 void route_handler::init() {
   // initialize routes
   add_route("/", new index_controller());
-  add_route("/About", new about_controller());
+  add_route("/About(/.*)*", new about_controller());
   add_route("/Shutdown", new shutdown_controller());
   add_route("/Echo/.*", echo_route_handler);
 }

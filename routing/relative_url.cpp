@@ -3,7 +3,7 @@
 #include "relative_url.h"
 
 bool relative_url::parse(const std::string &url) {
-  std::regex regex("(https?)://([^/]+)(/.*)\\?(.*)#(.*)");
+  std::regex regex("(/.*)\\??(.*)?#?(.*)?");
   std::smatch match;
 
   if (!std::regex_match(url, match, regex)) {
@@ -28,3 +28,12 @@ bool relative_url::parse(const std::string &url) {
 }
 
 relative_url::relative_url(const std::string &url) { _malformed = parse(url); }
+
+const std::string relative_url::path() const { return _path; }
+
+const std::string relative_url::fragment() const { return _fragment; }
+
+const std::unordered_map<std::string, std::string>
+relative_url::query_params() const {
+  return _queryParams;
+}

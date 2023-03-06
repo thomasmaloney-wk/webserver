@@ -13,4 +13,7 @@ private:
 
 public:
   relative_url(const std::string& url);
+  const std::string path() const;
+  const std::string fragment() const;
+  const std::unordered_map<std::string, std::string> query_params() const;
 };
